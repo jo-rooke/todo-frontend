@@ -52,11 +52,13 @@ export default function ToDo(props: MainProps): JSX.Element {
       })
       .then((response) => {
         props.fetchToDos();
+        console.log("completedChange");
       })
       .catch((error) => {
         console.log(error);
       });
   }
+  console.log(editMode);
 
   return (
     <tr>
@@ -66,8 +68,8 @@ export default function ToDo(props: MainProps): JSX.Element {
           type="checkbox"
           value=""
           id="flexCheckDefault"
-          checked={props.todoprops.completed_status}
-          onChange={handleCompletedTodo}
+          defaultChecked={props.todoprops.completed_status}
+          onClick={handleCompletedTodo}
         />
       </td>
       <td>{props.todoprops.description}</td>
@@ -86,7 +88,9 @@ export default function ToDo(props: MainProps): JSX.Element {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={handleEditMode}
+            onClick={() => {
+              editMode = true;
+            }}
           >
             Edit
           </button>
