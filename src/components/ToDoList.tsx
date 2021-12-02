@@ -5,6 +5,9 @@ import { ToDoProps } from "../ToDoProps";
 
 export default function ToDoList(): JSX.Element {
   const [todos, setTodos] = useState<ToDoProps[]>([]);
+  useEffect(() => {
+    fetchToDos();
+  }, []);
 
   const fetchToDos = async () => {
     const response = await fetch("http://localhost:5000/todos/");
@@ -12,20 +15,14 @@ export default function ToDoList(): JSX.Element {
     setTodos(jsonBody);
   };
 
-  useEffect(() => {
-    fetchToDos();
-  }, [todos]);
-
   const episodeElements = todos.map((todo) => (
     <ToDo
       key={todo.id}
-      id={todo.id}
-      description={todo.description}
-      creation_date={todo.creation_date}
-      due_date={todo.due_date}
-      completed_status={todo.completed_status}
+      fetchToDos={fetchToDos}
+      todoprops={todo} // todoprops describes the type of todo object
     />
   ));
+
   return (
     <>
       <h1> To Do: </h1>

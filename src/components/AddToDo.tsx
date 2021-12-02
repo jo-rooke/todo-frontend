@@ -1,8 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
-import { MainProps } from "../MainProps";
 
-export default function AddToDo(props: MainProps): JSX.Element {
+interface AddProps {
+  fetchToDos: () => void;
+}
+
+export default function AddToDo(props: AddProps): JSX.Element {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
 
@@ -13,7 +16,6 @@ export default function AddToDo(props: MainProps): JSX.Element {
         due_date: dueDate,
       })
       .then((response) => {
-        console.log("test1");
         props.fetchToDos();
       })
       .catch((error) => {

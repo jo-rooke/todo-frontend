@@ -1,7 +1,9 @@
 import { MainProps } from "../MainProps";
 import axios from "axios";
+import { useState } from "react";
 
 export default function ToDo(props: MainProps): JSX.Element {
+  const [editDescription, setEditDescription] = useState("");
   const sanitiseCTime = props.todoprops.creation_date.replace(
     "T00:00:00.000Z",
     ""
@@ -22,10 +24,32 @@ export default function ToDo(props: MainProps): JSX.Element {
   async function handleEditTodo() {
     await axios
       .put(`http://localhost:5000/todos/${props.todoprops.id}`, {
-          description: //TBD
-      } 
+        description: editDescription,
+      })
+      .then((response) => {
+        props.fetchToDos();
+        editMode = false;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
-      )
+  let editMode = false;
+
+  function handleEditMode() {
+    if (editMode === false) {
+      editMode = true;
+    } else {
+      editMode = false;
+    }
+  }
+
+  async function handleCompletedTodo() {
+    await axios
+      .put(`http://localhost:5000/todos/${props.todoprops.id}`, {
+        completed_status: !props.todoprops.completed_status,
+      })
       .then((response) => {
         props.fetchToDos();
       })
@@ -33,32 +57,6 @@ export default function ToDo(props: MainProps): JSX.Element {
         console.log(error);
       });
   }
-
-  //     const handleDeleteTodo = async () => {
-  //   await axios
-  //     .delete(`${API_BASE}todos/${props.todo.id}`)
-  //     .then((response) => {
-  //       props.loadAllToDos();
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  //   const handleDoneChange = async () => {
-  //     axios
-  //       .patch(`${API_BASE}todos/${props.todo.id}`, {
-  //         done: !props.todo.done,
-  //       })
-  //       .then((response) => {
-  //         props.loadAllToDos();
-  //         console.log(response);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   };
 
   return (
     <tr>
@@ -68,6 +66,8 @@ export default function ToDo(props: MainProps): JSX.Element {
           type="checkbox"
           value=""
           id="flexCheckDefault"
+          checked={props.todoprops.completed_status}
+          onChange={handleCompletedTodo}
         />
       </td>
       <td>{props.todoprops.description}</td>
@@ -82,9 +82,30 @@ export default function ToDo(props: MainProps): JSX.Element {
       </td>
 
       <td>
-        <button type="button" className="btn btn-primary">
-          Edit
-        </button>
+        {editMode === false ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleEditMode}
+          >
+            Edit
+          </button>
+        ) : (
+          <>
+            <input
+              type="text"
+              value={editDescription}
+              onChange={(e) => setEditDescription(e.target.value)}
+            />
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={handleEditTodo}
+            >
+              Confirm
+            </button>
+          </>
+        )}
       </td>
       <td>
         <button
