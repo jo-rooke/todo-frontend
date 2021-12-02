@@ -6,14 +6,15 @@ import { ToDoProps } from "../ToDoProps";
 export default function ToDoList(): JSX.Element {
   const [todos, setTodos] = useState<ToDoProps[]>([]);
 
+  const fetchToDos = async () => {
+    const response = await fetch("http://localhost:5000/todos/");
+    const jsonBody: ToDoProps[] = await response.json();
+    setTodos(jsonBody);
+  };
+
   useEffect(() => {
-    const fetchToDos = async () => {
-      const response = await fetch("http://localhost:5000/todos/");
-      const jsonBody: ToDoProps[] = await response.json();
-      setTodos(jsonBody);
-    };
     fetchToDos();
-  }, []);
+  }, [todos]);
 
   const episodeElements = todos.map((todo) => (
     <ToDo
@@ -28,7 +29,7 @@ export default function ToDoList(): JSX.Element {
   return (
     <>
       <h1> To Do: </h1>
-      <AddToDo />
+      <AddToDo fetchToDos={fetchToDos} />
       <table className="table table-hover">
         <tbody>{episodeElements}</tbody>
       </table>
