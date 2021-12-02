@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function ToDo(props: MainProps): JSX.Element {
   const [editDescription, setEditDescription] = useState("");
+  const [editingMode, setEditingMode] = useState(false);
   const sanitiseCTime = props.todoprops.creation_date.replace(
     "T00:00:00.000Z",
     ""
@@ -28,21 +29,11 @@ export default function ToDo(props: MainProps): JSX.Element {
       })
       .then((response) => {
         props.fetchToDos();
-        editMode = false;
+        setEditingMode(false);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
-
-  let editMode = false;
-
-  function handleEditMode() {
-    if (editMode === false) {
-      editMode = true;
-    } else {
-      editMode = false;
-    }
   }
 
   async function handleCompletedTodo() {
@@ -58,7 +49,6 @@ export default function ToDo(props: MainProps): JSX.Element {
         console.log(error);
       });
   }
-  console.log(editMode);
 
   return (
     <tr>
@@ -84,12 +74,12 @@ export default function ToDo(props: MainProps): JSX.Element {
       </td>
 
       <td>
-        {editMode === false ? (
+        {editingMode === false ? (
           <button
             type="button"
             className="btn btn-primary"
             onClick={() => {
-              editMode = true;
+              setEditingMode(true);
             }}
           >
             Edit
