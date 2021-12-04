@@ -13,7 +13,9 @@ export default function ToDo(props: MainProps): JSX.Element {
 
   async function handleDeleteTodo() {
     await axios
-      .delete(`http://localhost:5000/todos/${props.todoprops.id}`)
+      .delete(
+        `https://jr99-to-do-backend.herokuapp.com/todos/${props.todoprops.id}`
+      )
       .then((response) => {
         props.fetchToDos();
       })
@@ -24,9 +26,12 @@ export default function ToDo(props: MainProps): JSX.Element {
 
   async function handleEditTodo() {
     await axios
-      .put(`http://localhost:5000/todos/${props.todoprops.id}`, {
-        description: editDescription,
-      })
+      .put(
+        `https://jr99-to-do-backend.herokuapp.com/todos/${props.todoprops.id}`,
+        {
+          description: editDescription,
+        }
+      )
       .then((response) => {
         props.fetchToDos();
         setEditingMode(false);
@@ -37,13 +42,16 @@ export default function ToDo(props: MainProps): JSX.Element {
   }
 
   async function handleCompletedTodo() {
+    console.log(props.todoprops.completed_status);
     await axios
-      .put(`http://localhost:5000/todos/${props.todoprops.id}`, {
-        completed_status: !props.todoprops.completed_status,
-      })
+      .put(
+        `https://jr99-to-do-backend.herokuapp.com/todos/completed/${props.todoprops.id}`,
+        {
+          completed_status: !props.todoprops.completed_status,
+        }
+      )
       .then((response) => {
         props.fetchToDos();
-        console.log("completedChange");
       })
       .catch((error) => {
         console.log(error);
@@ -58,8 +66,8 @@ export default function ToDo(props: MainProps): JSX.Element {
           type="checkbox"
           value=""
           id="flexCheckDefault"
-          defaultChecked={props.todoprops.completed_status}
           onClick={handleCompletedTodo}
+          defaultChecked={props.todoprops.completed_status}
         />
       </td>
       <td>{props.todoprops.description}</td>

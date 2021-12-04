@@ -11,7 +11,7 @@ export default function AddToDo(props: AddProps): JSX.Element {
 
   async function handleAddTodo() {
     await axios
-      .post("http://localhost:5000/todos", {
+      .post("https://jr99-to-do-backend.herokuapp.com/todos", {
         description: description,
         due_date: dueDate,
       })

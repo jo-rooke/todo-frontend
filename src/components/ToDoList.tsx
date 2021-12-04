@@ -10,7 +10,9 @@ export default function ToDoList(): JSX.Element {
   }, []);
 
   const fetchToDos = async () => {
-    const response = await fetch("http://localhost:5000/todos/");
+    const response = await fetch(
+      "https://jr99-to-do-backend.herokuapp.com/todos/"
+    );
     const jsonBody: ToDoProps[] = await response.json();
     setTodos(jsonBody);
   };
